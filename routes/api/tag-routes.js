@@ -7,7 +7,9 @@ const { Tag, Product, ProductTag } = require('../../models');
 router.get('/', async (req, res) => {
   try {
     // Find all tags
-    const tags = await Tag.findAll();
+    const tags = await Tag.findAll({
+      include: Product,
+    });
     res.status(200).json(tags);
   } catch (err) {
     res.status(500).json(err);
@@ -17,8 +19,10 @@ router.get('/', async (req, res) => {
 // get one tag
 router.get('/:id', async (req, res) => {
   try {
-    // Find a single tag by its `id`
-    const tag = await Tag.findByPk(req.params.id);
+    // Find a single tag by its `id` and include associated Products
+    const tag = await Tag.findByPk(req.params.id, {
+      include: Product,
+    });
     if (!tag) {
       res.status(404).json({ message: 'Tag not found' });
     } else {
@@ -72,4 +76,3 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
-
